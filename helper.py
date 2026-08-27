@@ -38,6 +38,21 @@ BASE_DIR = Path(__file__).parent
 csv_file_path = BASE_DIR / "combined_dataset_travel.csv"
 vectordb_file_path = BASE_DIR / "faiss_index"
 
+# Cache for FAISS vector database to avoid repeated disk I/O
+_cached_vectordb = None
+
+def get_vector_db():
+    """Load and cache the FAISS vector database to avoid repeated disk I/O."""
+    global _cached_vectordb
+    if _cached_vectordb is None:
+        if not vectordb_file_path.exists():
+            raise FileNotFoundError(
+                f"FAISS index not found at {vectordb_file_path}. "
+                f"Please run create_vector_db() first to generate the index."
+            )
+        _cached_vectordb = FAISS.load_local(str(vectordb_file_path), instructor_embeddings, allow_dangerous_deserialization=True)
+    return _cached_vectordb
+
 def create_vector_db():
     """Create and save the FAISS vector database from the CSV dataset."""
     # Check if CSV file exists
@@ -69,8 +84,8 @@ def get_qa_chain():
             f"Please run create_vector_db() first to generate the index."
         )
     
-    # Load the vector database from the local folder
-    vectordb = FAISS.load_local(str(vectordb_file_path), instructor_embeddings, allow_dangerous_deserialization=True)
+    # Load the vector database from cache
+    vectordb = get_vector_db()
 
     # Create a retriever for querying the vector database
     retriever = vectordb.as_retriever(search_kwargs={"k": 4})
@@ -106,8 +121,8 @@ def get_qa_chain_with_history(current_question, conversation_history="", context
             f"Please run create_vector_db() first to generate the index."
         )
     
-    # Load the vector database from the local folder
-    vectordb = FAISS.load_local(str(vectordb_file_path), instructor_embeddings, allow_dangerous_deserialization=True)
+    # Load the vector database from cache
+    vectordb = get_vector_db()
 
     # Use contextualized query for retrieval if provided, otherwise use current question
     retrieval_query = contextualized_query if contextualized_query else current_question
@@ -162,9 +177,8 @@ def plan_trip(starting_city, destination, budget, travel_days, interests,
             f"Please run create_vector_db() first to generate the index."
         )
     
-    # Load the vector database
-    vectordb = FAISS.load_local(str(vectordb_file_path), instructor_embeddings, 
-                                allow_dangerous_deserialization=True)
+    # Load the vector database from cache
+    vectordb = get_vector_db()
     
     # Create a search query based on user preferences
     search_query = f"travel to {destination if destination else starting_city} " \
