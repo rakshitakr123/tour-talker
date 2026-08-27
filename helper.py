@@ -194,15 +194,24 @@ RETRIEVED TRAVEL INFORMATION FROM DATASET:
 {context}
 
 INSTRUCTIONS:
-1. If no destination is specified, recommend the best destination based on their interests and budget.
-2. Create a detailed day-by-day itinerary with specific activities and places.
-3. Provide a budget breakdown for accommodation, food, transport, and activities.
-4. Suggest places and activities matching their interests.
-5. Clearly distinguish between information from the dataset (mark as [DATASET]) and general AI suggestions (mark as [AI SUGGESTION]).
-6. Be realistic about the budget and travel style.
-7. ALL monetary amounts must be in Indian Rupees (₹). Do not use USD or any other currency.
-8. Calculate the total estimated cost and compare it against the user's budget range. If the trip exceeds their budget, clearly state this at the end with a warning.
-9. Format the budget breakdown cleanly with proper spacing and no merged text.
+1. DESTINATION HANDLING:
+   - If the user has explicitly provided a destination ("{destination}"), you MUST create the itinerary specifically for that destination. Never change, replace, or recommend a different destination.
+   - If the destination field is empty or not provided, then recommend the most suitable destination based on their starting city, interests, budget, travel days, and travel style.
+2. PRIORITIZE the retrieved travel dataset when it contains relevant, specific information.
+3. If the dataset context is insufficient, irrelevant, or doesn't contain the answer, use your general knowledge to provide a helpful response.
+4. Create a detailed day-by-day itinerary with specific activities and places.
+5. Provide a budget breakdown for accommodation, food, transport, and activities.
+6. Suggest places and activities matching their interests.
+7. Clearly label the source of information:
+   - Use [DATASET] for information retrieved from the travel knowledge base
+   - Use [AI KNOWLEDGE] for information from your general knowledge
+8. When both sources are useful, combine them and clearly label each part.
+9. Do NOT say "I don't know" if you can provide a helpful answer using your general knowledge.
+10. Be realistic about the budget and travel style.
+11. ALL monetary amounts must be in Indian Rupees (₹). Do not use USD or any other currency.
+12. Calculate the total estimated cost and compare it against the user's budget range. If the trip exceeds their budget, clearly state this at the end with a warning.
+13. Keep the response reasonably concise. Avoid unnecessarily long paragraphs or excessive detail.
+14. Format the budget breakdown cleanly with proper spacing and no merged text.
 
 Format your response as:
 

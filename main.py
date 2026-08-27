@@ -1,6 +1,65 @@
 import streamlit as st
 from helper import get_qa_chain, create_vector_db, plan_trip, get_qa_chain_with_history
 
+# Set page configuration with sky blue theme
+st.set_page_config(
+    page_title="TourTalker",
+    page_icon="✈️"
+)
+
+# Custom CSS for sky blue theme
+st.markdown("""
+<style>
+    .stApp {
+        background-color: #E6F3FF;
+    }
+    /* Main text and headings */
+    h1, h2, h3, h4, h5, h6, .stTitle, .stMarkdown {
+        color: #1E3A5F !important;
+    }
+    /* Secondary text */
+    p, .stText, label {
+        color: #374151 !important;
+    }
+    /* Tab text */
+    .stTabs [data-baseweb="tab"] {
+        color: #1E3A5F !important;
+    }
+    /* Input placeholder */
+    .stTextInput>div>div>input::placeholder {
+        color: #6B7280 !important;
+    }
+    /* Input text */
+    .stTextInput>div>div>input {
+        background-color: #FFFFFF;
+        color: #1F2937 !important;
+    }
+    /* Buttons */
+    .stButton>button {
+        background-color: #4A90E2;
+        color: white;
+    }
+    .stButton>button:hover {
+        background-color: #357ABD;
+    }
+    /* Tab styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 2rem;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 3rem;
+        border-radius: 0.5rem 0.5rem 0 0;
+        padding: 0 1rem;
+        background-color: transparent;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #B8D4E8;
+        color: #1E3A5F;
+        border-bottom: 3px solid #4A90E2;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # Function to get the chatbot response
 def get_bot_response(user_input):
     try:
@@ -16,10 +75,13 @@ def get_bot_response(user_input):
 
 # Streamlit UI
 def main():
-    st.title("TourTalker")
+    st.title("TourTalker ✈️")
+    st.markdown("### Your AI-Powered Travel Assistant 🌍")
+    st.markdown("Explore destinations, ask travel questions, and create personalized trip plans powered by AI.")
+    st.markdown("---")
     
     # Create tabs
-    tab1, tab2 = st.tabs(["Travel Q&A", "Trip Planner"])
+    tab1, tab2 = st.tabs(["💬 Travel Q&A", "🗺️ Trip Planner"])
     
     # Tab 1: Travel Q&A (existing functionality with conversation memory)
     with tab1:
@@ -45,7 +107,7 @@ def main():
             st.rerun()
         
         # User input text box
-        user_input = st.text_input("You:", "")
+        user_input = st.text_input("", placeholder="Ask about destinations, food, hotels, attractions, or travel tips...")
         
         if st.button("Ask"):
             if not user_input.strip():
